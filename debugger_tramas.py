@@ -50,8 +50,8 @@ DIRECCIONES = {
     }
 def request_response(linea):
     posicion = (linea -1) % 4
-    origen, destino, tipo = DIRECCIONES[posicion]
-    return origen, destino, tipo
+    return DIRECCIONES[posicion]
+    
 
 def procesar_archivo(archivo_bin, archivo_salida):
 
@@ -89,6 +89,6 @@ def procesar_archivo(archivo_bin, archivo_salida):
 
 if __name__ == "__main__":
     procesar_archivo(
-        "bytes-260113_1500.log",
-        "tramas_13-01-26_1500.csv"
+        "bytes-260113_1600.log",
+        "tramas_13-01-26_1600.csv"
     )
