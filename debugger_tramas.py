@@ -42,13 +42,18 @@ def extraer_tramas(info: bytes) -> list:
 
     return tramas
 
-def procesar_archivo(archivo_bin, archivo_salida):
-    DIRECCIONES = {
+DIRECCIONES = {
         0: ("POS", "Proxy", "REQ"),
         1: ("Proxy", "B24", "REQ"),
         2: ("B24", "Proxy", "RESP"),
         3: ("Proxy", "POS", "RESP"),
     }
+def request_response(linea):
+    posicion = (linea -1) % 4
+    origen, destino, tipo = DIRECCIONES[posicion]
+    return origen, destino, tipo
+
+def procesar_archivo(archivo_bin, archivo_salida):
 
     with open(archivo_bin, "rb") as f:
         data = f.read()
@@ -68,8 +73,7 @@ def procesar_archivo(archivo_bin, archivo_salida):
                 continue
 
             linea += 1
-            posicion = (linea - 1) % 4
-            origen, destino, tipo = DIRECCIONES[posicion]
+            origen, destino, tipo = request_response(linea)
 
             hex_str = " ".join(f"{b:02X}" for b in trama)
 
@@ -85,6 +89,6 @@ def procesar_archivo(archivo_bin, archivo_salida):
 
 if __name__ == "__main__":
     procesar_archivo(
-        "bytes-260111_1600.log",
-        "tramas_11-01-26_1600.csv"
+        "bytes-260113_1500.log",
+        "tramas_13-01-26_1500.csv"
     )
