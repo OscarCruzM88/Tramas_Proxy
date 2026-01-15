@@ -1,3 +1,7 @@
+BYTES_ERROR = 14
+BYTES_SIN_RED = 34
+BYTES_VALIDOS = BYTES_SIN_RED
+
 def extraer_tramas(info: bytes) -> list:
     """
     Extrae tramas de archivo descargado en binario desde debugger.
@@ -42,6 +46,9 @@ def extraer_tramas(info: bytes) -> list:
 
     return tramas
 
+def tramas_validas(longitud):
+    return longitud > BYTES_VALIDOS
+
 DIRECCIONES = {
         0: ("POS", "Proxy", "REQ"),
         1: ("Proxy", "B24", "REQ"),
@@ -83,11 +90,11 @@ def procesar_archivo(archivo_bin, archivo_salida):
     with open(archivo_salida, "w", encoding="utf-8") as out:
         linea = 0  # contador solo de tramas válidas
 
-        for idx, trama in enumerate(tramas, start=1):
+        for trama in tramas:
             longitud = len(trama)
 
             # REGLA 1: descartar tramas cortas
-            if longitud <= 14:
+            if not tramas_validas(longitud):
                 continue
 
             linea += 1
