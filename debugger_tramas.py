@@ -53,7 +53,23 @@ def request_response(linea: int) -> tuple[str, str, str]:
     return DIRECCIONES[posicion]
 
 def byte_a_hex(trama: bytes) -> str:
-    return " ".join(f"{b:02X}" for b in trama)   
+    return " ".join(f"{b:02X}" for b in trama)
+
+def construir_linea_tx(
+    indice_trx: int,
+    origen: str,
+    destino: str,
+    tipo: str,
+    longitud: int,
+    hex_str: str
+) -> str:
+    return (
+        f"TX{indice_trx};"
+        f"{origen}->{destino};"
+        f"{tipo};"
+        f"{longitud}: "
+        f"{hex_str}\n"
+    )
 
 def procesar_archivo(archivo_bin, archivo_salida):
 
@@ -79,13 +95,18 @@ def procesar_archivo(archivo_bin, archivo_salida):
 
             hex_str = byte_a_hex(trama)
 
-            out.write(
-                f"TX{(linea - 1)//4 + 1};"
-                f"{origen}->{destino};"
-                f"{tipo};"
-                f"{longitud}: "
-                f"{hex_str}\n"
+            indice_tx = (linea - 1) // 4 + 1
+
+            linea_salida = construir_linea_tx(
+                indice_tx,
+                origen,
+                destino,
+                tipo,
+                longitud,
+                hex_str
             )
+
+            out.write(linea_salida)
 
     print(f"Listo. Se escribieron {linea} tramas válidas en {archivo_salida}")
 
