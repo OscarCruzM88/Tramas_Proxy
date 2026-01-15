@@ -48,10 +48,12 @@ DIRECCIONES = {
         2: ("B24", "Proxy", "RESP"),
         3: ("Proxy", "POS", "RESP"),
     }
-def request_response(linea):
+def request_response(linea: int) -> tuple[str, str, str]:
     posicion = (linea -1) % 4
     return DIRECCIONES[posicion]
-    
+
+def byte_a_hex(trama: bytes) -> str:
+    return " ".join(f"{b:02X}" for b in trama)   
 
 def procesar_archivo(archivo_bin, archivo_salida):
 
@@ -75,7 +77,7 @@ def procesar_archivo(archivo_bin, archivo_salida):
             linea += 1
             origen, destino, tipo = request_response(linea)
 
-            hex_str = " ".join(f"{b:02X}" for b in trama)
+            hex_str = byte_a_hex(trama)
 
             out.write(
                 f"TX{(linea - 1)//4 + 1};"
