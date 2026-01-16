@@ -16,6 +16,7 @@ IND_STAT = 1
 FILLER_AUT_DEFAULT = 35
 AUT = 38
 
+BYTES_MIN_TRAMA = 14
 # ===============================
 # CATÁLOGO DE PLANES
 # ===============================
@@ -56,6 +57,8 @@ CATALOGO_PLANES = {
     "60-1": "Nip Venta Externa",
     "61-0": "Puntos MasterCard",
     "61-1": "Nip Puntos MasterCard",
+    "60-8": "Puntos BBVA",
+    "60-9": "Nip Puntos BBVA",
     "60-6": "Devolución Externa",
     "60-4": "Cancelación Externa",
     "8-0": "Venta Dilisa",
@@ -188,6 +191,12 @@ def construir_registro(c, autorizacion):
 # ===============================
 # PROCESO PRINCIPAL
 # ===============================
+def es_linea_proxy_b24(linea: str) -> bool:
+    return "Proxy->B24" in linea
+                
+def trama_min_valida(bytes_hex: list[str]) -> bool:                
+    return len(bytes_hex) >= BYTES_MIN_TRAMA
+
 def procesar_csv(entrada, salida):
     with open(entrada, "r", encoding="utf-8") as f:
         lineas = f.readlines()
@@ -196,11 +205,11 @@ def procesar_csv(entrada, salida):
         out.write("Plan;Descripcion;Devolucion;Venta;Tienda;Terminal;Boleta\n")
 
         for linea in lineas:
-            if "Proxy->B24" not in linea:
+            if not es_linea_proxy_b24(linea):
                 continue
 
             bytes_trama = hex_bytes(linea)
-            if len(bytes_trama) < 14:
+            if not trama_min_valida(bytes_trama):
                 continue
 
             campos = extraer_campos(bytes_trama)
@@ -223,6 +232,6 @@ def procesar_csv(entrada, salida):
 # ===============================
 if __name__ == "__main__":
     procesar_csv(
-        "tramas_11-01-26_1500.csv",
-        "monitor_11-01-26_1500.csv"
+        "tramas_13-01-26_1600.csv",
+        "monitor_13-01-26_1600.csv"
     )
