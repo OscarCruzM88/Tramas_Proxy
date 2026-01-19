@@ -32,6 +32,7 @@ CATALOGO_PLANES = {
     "33-0": "Consulta Mon Integrado",
     "35-0": "Recarga Mon Integrado",
     "36-0": "Devolución Mon Integrado",
+    "36-4": "Cancelación Dev Mon Integrado",
     "38-0": "Devolución Dilisa",
     "39-0": "Devolución LPC",
     "52-0": "Emisión Monedero",
@@ -55,12 +56,13 @@ CATALOGO_PLANES = {
     "29-4": "Cancelación Abono LPC",
     "60-0": "Venta Externa",
     "60-1": "Nip Venta Externa",
-    "61-0": "Puntos MasterCard",
-    "61-1": "Nip Puntos MasterCard",
+    "60-4": "Reverso Externa",
+    "60-6": "Devolución Externa",
+    "60-7": "Cancelación Externa",
     "60-8": "Puntos BBVA",
     "60-9": "Nip Puntos BBVA",
-    "60-6": "Devolución Externa",
-    "60-4": "Cancelación Externa",
+    "61-0": "Puntos MasterCard",
+    "61-1": "Nip Puntos MasterCard",
     "8-0": "Venta Dilisa",
     "8-1": "Nip Venta Dilisa"
 }
@@ -181,7 +183,7 @@ def construir_registro(c, autorizacion):
 
     if plan in (26, 36, 38, 39, 92, 97):
         r["devolucion"] = amount
-    elif message in (4, 6):
+    elif message in (4, 6, 7):
         r["devolucion"] = amount
     elif message in (0, 1, 8, 9):
         r["venta"] = amount
@@ -232,6 +234,6 @@ def procesar_csv(entrada, salida):
 # ===============================
 if __name__ == "__main__":
     procesar_csv(
-        "tramas_13-01-26_1600.csv",
-        "monitor_13-01-26_1600.csv"
+        "tramas_18-01-26_1500.csv",
+        "monitor_18-01-26_1500.csv"
     )
